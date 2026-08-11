@@ -3,5 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('register');
+});
+
+Route::post('/register-proses', function () {
+    return view('register-proses');
 });

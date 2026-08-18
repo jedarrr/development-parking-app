@@ -9,6 +9,14 @@ Route::get('/', function () {
 Route::post('/login', 
 [LoginController::class, 'authentication'])->name('login.submit');
 
+Route::get('/authentication.logout', function () {
+    return view('authentication.logout');
+});
+
+Route::post('/logout', 
+[LoginController::class, 'logout'])->name('logout');
+
+
 Route::get('/admin.dashboard-admin', function () {
     return view('admin.dashboard-admin');
 });

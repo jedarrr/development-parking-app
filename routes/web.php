@@ -3,11 +3,11 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('authentication.register');
+    return view('authentication.login');
 });
 
-Route::post('/login-proses', 
-[AuthController::class, 'loginProses'])->name('login.proses');
+Route::post('/login', 
+[LoginController::class, 'authentication'])->name('login.submit');
 
 Route::get('/admin.dashboard-admin', function () {
     return view('admin.dashboard-admin');

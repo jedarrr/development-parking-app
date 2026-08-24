@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin Parking</title>
-    
     <!-- Tailwind CSS (via Vite jika di Laravel) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
@@ -19,38 +18,38 @@
     <div class="flex h-screen overflow-hidden">
         
         <!-- SIDEBAR -->
-        <aside class="w-64 bg-blue-700 text-white flex flex-col justify-between p-6">
+        <aside class="w-64 bg-blue-600 text-white flex flex-col justify-between p-6">
             <div>
                 <!-- Logo / Title -->
                 <h1 class="text-2xl font-bold tracking-wider uppercase mb-10">ADMIN</h1>
 
                 <!-- Navigation Menu -->
                 <nav class="space-y-2">
-                    <a href="#" class="flex items-center space-x-3 bg-blue-800 px-4 py-3 rounded-lg text-white font-medium shadow-sm">
+                    <a href="{{ route('halaman.admin') }}" class="flex items-center space-x-3 bg-blue-700 px-4 py-3 rounded-lg text-white font-medium shadow-sm">
                         <i class="fas fa-home w-5"></i>
                         <span>Home</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-600 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('halaman.user') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-users-cog w-5"></i>
                         <span>User</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-600 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('halaman.tarif-parkir') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-file-invoice-dollar w-5"></i>
                         <span>Tarif Parkir</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-600 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('halaman.area-parkir') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-parking w-5"></i>
                         <span>Area Parkir</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-600 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('halaman.kendaraan') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-car w-5"></i>
                         <span>Kendaraan</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-600 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('halaman.log-aktivitas') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-history w-5"></i>
                         <span>Log Aktifitas</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-600 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('halaman.settings') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-cog w-5"></i>
                         <span>Settings</span>
                     </a>
@@ -59,7 +58,7 @@
 
             <!-- Logout Button -->
             <div>
-                <a href="#" class="flex items-center space-x-3 text-blue-100 hover:text-white transition">
+                <a href="{{ route('halaman.logout') }}" class="flex items-center space-x-3 text-blue-100 hover:text-white transition">
                     <i class="fas fa-sign-out-alt w-5"></i>
                     <span>Logout</span>
                 </a>

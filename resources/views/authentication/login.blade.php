@@ -20,13 +20,16 @@
         <form action="{{ route('login.submit') }}" method="POST" class="space-y-5">
             @csrf
 
-            <!-- Input Username / Email -->
+            <!-- Input Username -->
             <div>
                 <label for="username" class="block text-xs font-semibold text-gray-700 mb-2">Username</label>
                 <div class="relative">
-                    <input type="text" id="username" name="username" placeholder="Username" required
+                    <input type="text" id="username" name="username" value="{{ old('username') }}" placeholder="Username" required
                         class="w-full px-4 py-3 text-sm text-gray-700 placeholder-gray-400 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 transition-all">
                 </div>
+                @error('username')
+                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- Input Password -->
@@ -37,7 +40,7 @@
                         class="w-full px-4 py-3 text-sm text-gray-700 placeholder-gray-400 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 transition-all">
                     
                     <!-- Icon Visibility Toggle (Mata) -->
-                    <button type="button" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
+                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -54,7 +57,7 @@
             <!-- Button Submit -->
             <div class="pt-2">
                 <button type="submit" 
-                    class="w-full py-3 bg-blue-700 t hover:bg-[#2e1eb0] text-white font-medium text-sm rounded-lg transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#3B28CC]">
+                    class="w-full py-3 bg-blue-700 hover:bg-[#2e1eb0] text-white font-medium text-sm rounded-lg transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#3B28CC]">
                     Login
                 </button>
             </div>
@@ -70,7 +73,7 @@
         <!-- Divider & Social Login -->
         <div class="mt-8 flex justify-center space-x-8">
             <!-- Google Button Alternative -->
-            <button class="flex flex-col items-center group">
+            <button type="button" class="flex flex-col items-center group">
                 <div class="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-full bg-white group-hover:bg-gray-50 transition-colors">
                     <svg class="w-5 h-5" viewBox="0 0 24 24">
                         <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0112 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.273 0 3.19 2.7 1.24 6.66l4.026 3.105z"/>
@@ -83,7 +86,7 @@
             </button>
 
             <!-- Apple Button Alternative -->
-            <button class="flex flex-col items-center group">
+            <button type="button" class="flex flex-col items-center group">
                 <div class="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-full bg-white group-hover:bg-gray-50 transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.05-2.04.029-3.91 1.183-4.961 3.014-2.117 3.675-.54 9.103 1.51 12.06 1.004 1.45 2.192 3.075 3.774 3.02 1.52-.062 2.095-.98 3.935-.98 1.83 0 2.35.98 3.944.947 1.62-.029 2.645-1.474 3.633-2.91 1.144-1.664 1.613-3.275 1.637-3.357-.033-.016-3.142-1.2-3.175-4.764-.025-2.984 2.453-4.417 2.566-4.484-1.402-2.05-3.565-2.274-4.326-2.327-1.92-.156-3.09 1.05-3.985 1.05zM15.42 3.864c.8-1 1.341-2.385 1.193-3.766-1.184.048-2.617.788-3.467 1.776-.757.873-1.42 2.274-1.24 3.633 1.32.102 2.666-.632 3.514-1.643z"/>
@@ -94,5 +97,13 @@
         </div>
     </div>
 
+    <!-- Script Toggle Password -->
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+    </script>
 </body>
 </html>

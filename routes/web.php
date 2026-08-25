@@ -1,50 +1,34 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 
-Route::get('/', function () {
-    return view('authentication.login');
+// Redirect root ke login
+Route::redirect('/', '/login');
+
+// Auth Routes (Guest Only)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 });
 
-Route::post('/login', 
-[LoginController::class, 'authentication'])->name('login.submit');
+// Authenticated Routes
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/authentication.logout', function () {
-    return view('authentication.logout');
-});
+    // Route khusus Admin
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
+    });
 
-Route::post('/logout', 
-[LoginController::class, 'logout'])->name('logout');
+    // Route khusus Owner
+    Route::middleware('role:owner')->prefix('owner')->name('owner.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'ownerDashboard'])->name('dashboard');
+    });
 
-
-Route::get('/admin.dashboard-admin', function () {
-    return view('admin.dashboard-admin');
-});
-
-Route::get('/admin.user', function () {
-    return view('admin.user');
-});
-
-Route::get('/admin.tarif-parkir', function () {
-    return view('admin.tarif-parkir');
-});
-
-Route::get('/admin.area-parkir', function () {
-    return view('admin.area-parkir');
-});
-
-Route::get('/admin.kendaraan', function () {
-    return view('admin.kendaraan');
-});
-
-Route::get('/owner.dashboard-owner', function () {
-    return view('owner.dashboard-owner');
-});
-
-Route::get('/owner.rekap-transaksi', function () {
-    return view('owner.rekap-transaksi');
-});
-
-Route::get('/owner.rekap-transaksi-detail', function () {
-    return view('owner.rekap-transaksi-detail');
+    // Route khusus Petugas
+    Route::middleware('role:petugas')->prefix('petugas')->name('petugas.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'petugasDashboard'])->name('dashboard');
+    });
 });

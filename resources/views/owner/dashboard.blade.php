@@ -26,11 +26,11 @@
 
                 <!-- Navigasi Menu -->
                 <nav class="space-y-2">
-                    <a href="{{ route('halaman.owner') }}" class="flex items-center space-x-3 bg-blue-700 px-4 py-3 rounded-lg text-white font-medium shadow-sm">
+                    <a href="{{ route('owner.dashboard') }}" class="flex items-center space-x-3 bg-blue-700 px-4 py-3 rounded-lg text-white font-medium shadow-sm">
                         <i class="fas fa-home w-5"></i>
                         <span>Home</span>
                     </a>
-                    <a href="{{ route('halaman.rekap-transaksi') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('owner.rekap-transaksi-detail') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-file-invoice-dollar w-5"></i>
                         <span>Rekap Transaksi</span>
                     </a>

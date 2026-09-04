@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-white">
+<html lang="id" class="h-full bg-white">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Parking</title>
-    <!-- load tailwind via vite build asset -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="h-full flex items-center justify-center bg-white antialiased">
@@ -16,6 +15,13 @@
             <p class="text-xs text-gray-500 mt-1">Sign in to your account</p>
         </div>
 
+        <!-- Alert Error Global (Misal: Kredensial Salah) -->
+        @if(session('error'))
+            <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-xs rounded-lg">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <!-- Form Login -->
         <form action="{{ route('login.submit') }}" method="POST" class="space-y-5">
             @csrf
@@ -24,8 +30,8 @@
             <div>
                 <label for="username" class="block text-xs font-semibold text-gray-700 mb-2">Username</label>
                 <div class="relative">
-                    <input type="text" id="username" name="username" value="{{ old('username') }}" placeholder="Username" required
-                        class="w-full px-4 py-3 text-sm text-gray-700 placeholder-gray-400 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 transition-all">
+                    <input type="text" id="username" name="username" value="{{ old('username') }}" placeholder="Username" required autofocus
+                        class="w-full px-4 py-3 text-sm text-gray-700 placeholder-gray-400 bg-white border @error('username') border-red-500 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 transition-all">
                 </div>
                 @error('username')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -37,17 +43,26 @@
                 <label for="password" class="block text-xs font-semibold text-gray-700 mb-2">Password</label>
                 <div class="relative">
                     <input type="password" id="password" name="password" placeholder="Password" required
-                        class="w-full px-4 py-3 text-sm text-gray-700 placeholder-gray-400 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 transition-all">
-                    
+                        class="w-full pl-4 pr-11 py-3 text-sm text-gray-700 placeholder-gray-400 bg-white border @error('password') border-red-500 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 transition-all">
+
                     <!-- Icon Visibility Toggle (Mata) -->
-                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
+                        <!-- Icon Eye Open -->
+                        <svg id="eyeOpen" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
+                        <!-- Icon Eye Closed (Slashed) -->
+                        <svg id="eyeClosed" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a8.962 8.962 0 013.122-.563c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21f-9-9" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3l18 18" />
+                        </svg>
                     </button>
                 </div>
-                
+                @error('password')
+                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+
                 <!-- Forgot Password -->
                 <div class="text-right mt-2">
                     <a href="#" class="text-[11px] text-blue-600 hover:underline">Forgot Password?</a>
@@ -57,7 +72,7 @@
             <!-- Button Submit -->
             <div class="pt-2">
                 <button type="submit" 
-                    class="w-full py-3 bg-blue-700 hover:bg-[#2e1eb0] text-white font-medium text-sm rounded-lg transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#3B28CC]">
+                    class="w-full py-3 bg-blue-700 hover:bg-blue-800 text-white font-medium text-sm rounded-lg transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">
                     Login
                 </button>
             </div>
@@ -70,9 +85,8 @@
             </p>
         </div>
 
-        <!-- Divider & Social Login -->
+        <!-- Social Login -->
         <div class="mt-8 flex justify-center space-x-8">
-            <!-- Google Button Alternative -->
             <button type="button" class="flex flex-col items-center group">
                 <div class="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-full bg-white group-hover:bg-gray-50 transition-colors">
                     <svg class="w-5 h-5" viewBox="0 0 24 24">
@@ -85,7 +99,6 @@
                 <span class="text-[10px] text-gray-500 mt-1">Google</span>
             </button>
 
-            <!-- Apple Button Alternative -->
             <button type="button" class="flex flex-col items-center group">
                 <div class="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-full bg-white group-hover:bg-gray-50 transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -101,8 +114,14 @@
     <script>
         document.getElementById('togglePassword').addEventListener('click', function () {
             const passwordInput = document.getElementById('password');
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
+            const eyeOpen = document.getElementById('eyeOpen');
+            const eyeClosed = document.getElementById('eyeClosed');
+            
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            
+            eyeOpen.classList.toggle('hidden', isPassword);
+            eyeClosed.classList.toggle('hidden', !isPassword);
         });
     </script>
 </body>

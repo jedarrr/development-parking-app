@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    // WAJIB: Tentukan nama tabel dan primary key kustom Anda
-    protected $table = 'tb_user';
+    protected $table = 'users';
     protected $primaryKey = 'id_user';
-
-    public $timestamps = false;
+    public function getAuthIdentifierName()
+    {
+        return 'id_user';
+    }
 
     protected $fillable = [
         'nama_lengkap',
@@ -26,6 +26,5 @@ class User extends Authenticatable
 
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 }

@@ -1,71 +1,76 @@
 <?php
 
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AreaParkirController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\KendaraanController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
 
-// Redirect root ke login
-Route::redirect('/', '/login');
-
-// Auth Routes (Guest Only)
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+// Redirect awal disesuaikan status login
+Route::get('/', function () {
+    if (auth()->check()) {
+        $role = auth()->user()->role;
+        return match ($role) {
+            'admin'   => redirect()->route('admin.dashboard'),
+            'petugas' => redirect()->route('petugas.dashboard'),
+            'owner'   => redirect()->route('owner.dashboard'),
+            default   => redirect()->route('authentication.login'),
+        };
+    }
+    return redirect()->route('authentication.login');
 });
 
+// Guest Routes
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('authentication.login');
+    Route::post('/login', [LoginController::class, 'authenticate'])->name('login.submit');
+});
 
-// Route::get('/admin.dashboard-admin', function () {
-//     return view('admin.dashboard-admin');
-// })->name('halaman.admin');
+// Auth Routes
+Route::middleware('auth')->group(function () {
+    
+    // Logout Route
+    Route::post('/logout', [LoginController::class, 'logout'])->name('authentication.logout');
 
-// Route::get('/admin.user', function () {
-//     return view('admin.user');
-// })->name('halaman.user');
+    // Admin Routes
+    Route::middleware('role:admin')->prefix('admin')->as('admin.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        
+        // Perbaikan: /user (bukan /admin/user) dan name 'user' agar menjadi 'admin.user'
+        Route::get('/user', [UserController::class, 'index'])->name('user');
+        Route::post('/user', [UserController::class, 'store'])->name('user.store');
+        Route::patch('/user/{id}/toggle', [UserController::class, 'toggleStatus'])->name('user.toggle');
+        Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+        
+        Route::get('/tarif-parkir', function () { return view('admin.tarif-parkir'); })->name('tarif-parkir');
 
-// Route::get('/admin.tarif-parkir', function () {
-//     return view('admin.tarif-parkir');
-// })->name('halaman.tarif-parkir');
+        Route::get('/area-parkir', [AreaParkirController::class, 'index'])->name('area-parkir');
+        Route::post('/area-parkir', [AreaParkirController::class, 'store'])->name('area-parkir.store');
+        Route::put('/area-parkir/{id}', [AreaParkirController::class, 'update'])->name('area-parkir.update');
+        Route::delete('/area-parkir/{id}', [AreaParkirController::class, 'destroy'])->name('area-parkir.destroy');
 
-// Route::get('/admin.area-parkir', function () {
-//     return view('admin.area-parkir');
-// })->name('halaman.area-parkir');
+        Route::get('/kendaraan', [KendaraanController::class, 'index'])->name('kendaraan');
+        Route::post('/kendaraan', [KendaraanController::class, 'store'])->name('kendaraan.store');
+        Route::put('/kendaraan/{id}', [KendaraanController::class, 'update'])->name('kendaraan.update');
+        Route::delete('/kendaraan/{id}', [KendaraanController::class, 'destroy'])->name('kendaraan.destroy');
 
-// Route::get('/admin.kendaraan', function () {
-//     return view('admin.kendaraan');
-// })->name('halaman.kendaraan');
+        Route::get('/log-aktivitas', function () { return view('admin.log-aktivitas'); })->name('log-aktivitas');
+        Route::get('/settings', function () { return view('admin.settings'); })->name('settings');
+    });
 
-// Route::get('/owner.dashboard-owner', function () {
-//     return view('owner.dashboard-owner');
-// })->name('halaman.owner');
+    // Petugas Routes
+    Route::middleware('role:petugas')->prefix('petugas')->as('petugas.')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('petugas.dashboard');
+        })->name('dashboard');
+    });
 
-// Route::get('/owner.rekap-transaksi', function () {
-//     return view('owner.rekap-transaksi');
-// })->name('halaman.rekap-transaksi');
+    // Owner Routes
+    Route::middleware('role:owner')->prefix('owner')->as('owner.')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('owner.dashboard');
+        })->name('dashboard');
+    });
 
-// Route::get('/owner.rekap-transaksi-detail', function () {
-//     return view('owner.rekap-transaksi-detail');
-// })->name('halaman.rekap-transaksi-detail');
-
-// Route::get('/admin.log-aktivitas', function () {
-//     return view('admin.log-aktivitas');
-// })->name('halaman.log-aktivitas');
-
-// Route::get('/admin.settings', function () {
-//     return view('admin.settings');
-// })->name('halaman.settings');
-
-// Route::get('/petugas.dashboard-petugas', function () {
-//     return view('petugas.dashboard-petugas');
-// })->name('halaman.petugas');
-
-// Route::get('/petugas.cetak-struk-parkir', function () {
-//     return view('petugas.cetak-struk-parkir');
-// })->name('halaman.cetak-struk-parkir');
-
-// Route::get('/petugas.preview-cetak-struk-parkir', function () {
-//     return view('petugas.preview-cetak-struk-parkir');
-// })->name('halaman.preview-cetak-struk-parkir');
-
-// Route::get('/petugas.transaksi-pembayaran-parkir', function () {
-//     return view('petugas.transaksi-pembayaran-parkir');
-// })->name('halaman.transaksi-pembayaran-parkir');
+});

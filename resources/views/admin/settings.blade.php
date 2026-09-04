@@ -24,31 +24,31 @@
 
                 <!-- Navigation Menu -->
                 <nav class="space-y-2">
-                    <a href="{{ route('halaman.admin') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-home w-5"></i>
                         <span>Home</span>
                     </a>
-                    <a href="{{ route('halaman.user') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.user') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-users-cog w-5"></i>
                         <span>User</span>
                     </a>
-                    <a href="{{ route('halaman.tarif-parkir') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.tarif-parkir') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-file-invoice-dollar w-5"></i>
                         <span>Tarif Parkir</span>
                     </a>
-                    <a href="{{ route('halaman.area-parkir') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.area-parkir') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-parking w-5"></i>
                         <span>Area Parkir</span>
                     </a>
-                    <a href="{{ route('halaman.kendaraan') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.kendaraan') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-car w-5"></i>
                         <span>Kendaraan</span>
                     </a>
-                    <a href="{{ route('halaman.log-aktivitas') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.log-aktivitas') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-history w-5"></i>
                         <span>Log Aktifitas</span>
                     </a>
-                    <a href="{{ route('halaman.settings') }}" class="flex items-center space-x-3 bg-blue-700 px-4 py-3 rounded-lg text-white font-medium shadow-sm">
+                    <a href="{{ route('admin.settings') }}" class="flex items-center space-x-3 bg-blue-700 px-4 py-3 rounded-lg text-white font-medium shadow-sm">
                         <i class="fas fa-cog w-5"></i>
                         <span>Settings</span>
                     </a>
@@ -57,7 +57,7 @@
 
             <!-- Logout Button -->
             <div>
-                <a href="{{ route('halaman.logout') }}" class="flex items-center space-x-3 text-blue-100 hover:text-white transition">
+                <a href="{{ route('authentication.logout') }}" class="flex items-center space-x-3 text-blue-100 hover:text-white transition">
                     <i class="fas fa-sign-out-alt w-5"></i>
                     <span>Logout</span>
                 </a>

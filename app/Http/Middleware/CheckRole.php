@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoleMiddleware
+class CheckRole
 {
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
@@ -15,9 +15,7 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
-        $user = Auth::user();
-
-        if (in_array($user->role, $roles)) {
+        if (in_array(Auth::user()->role, $roles)) {
             return $next($request);
         }
 

@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen User - Admin</title>
     
-    <!-- Tailwind CSS (via Vite jika di Laravel) -->
+    <!-- Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Chart.js untuk Donut Chart Ringkasan User -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100 font-sans antialiased">
@@ -26,32 +26,31 @@
 
                 <!-- Navigasi -->
                 <nav class="space-y-2">
-                    <a href="{{ route('halaman.admin') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-home w-5"></i>
                         <span>Home</span>
                     </a>
-                    <!-- Menu User Aktif -->
-                    <a href="{{ route('halaman.user') }}" class="flex items-center space-x-3 bg-blue-700 px-4 py-3 rounded-lg text-white font-medium shadow-sm">
+                    <a href="{{ route('admin.user') }}" class="flex items-center space-x-3 bg-blue-700 px-4 py-3 rounded-lg text-white font-medium shadow-sm">
                         <i class="fas fa-users-cog w-5"></i>
                         <span>User</span>
                     </a>
-                    <a href="{{ route('halaman.tarif-parkir') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.tarif-parkir') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-file-invoice-dollar w-5"></i>
                         <span>Tarif Parkir</span>
                     </a>
-                    <a href="{{ route('halaman.area-parkir') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.area-parkir') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-parking w-5"></i>
                         <span>Area Parkir</span>
                     </a>
-                    <a href="{{ route('halaman.kendaraan') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.kendaraan') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-car w-5"></i>
                         <span>Kendaraan</span>
                     </a>
-                    <a href="{{ route('halaman.log-aktivitas') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.log-aktivitas') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-history w-5"></i>
                         <span>Log Aktifitas</span>
                     </a>
-                    <a href="{{ route('halaman.settings') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
+                    <a href="{{ route('admin.settings') }}" class="flex items-center space-x-3 text-blue-100 hover:bg-blue-700 px-4 py-3 rounded-lg font-medium transition">
                         <i class="fas fa-cog w-5"></i>
                         <span>Settings</span>
                     </a>
@@ -60,10 +59,13 @@
 
             <!-- Logout -->
             <div>
-                <a href="{{ route('halaman.logout') }}" class="flex items-center space-x-3 text-blue-100 hover:text-white transition">
-                    <i class="fas fa-sign-out-alt w-5"></i>
-                    <span>Logout</span>
-                </a>
+                <form action="{{ route('authentication.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="flex items-center space-x-3 text-blue-100 hover:text-white transition w-full">
+                        <i class="fas fa-sign-out-alt w-5"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
             </div>
         </aside>
 
@@ -76,10 +78,10 @@
                 
                 <div class="flex items-center space-x-6">
                     <!-- Search Bar Header -->
-                    <div class="relative">
-                        <input type="text" placeholder="Cari User..." class="bg-gray-100 text-xs rounded-lg pl-8 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 w-48">
+                    <form action="{{ route('admin.user') }}" method="GET" class="relative">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari User..." class="bg-gray-100 text-xs rounded-lg pl-8 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 w-48">
                         <i class="fas fa-search absolute left-2.5 top-2.5 text-gray-400 text-xs"></i>
-                    </div>
+                    </form>
 
                     <!-- Notification Icon -->
                     <button class="relative text-gray-500 hover:text-gray-700">
@@ -88,10 +90,10 @@
 
                     <!-- Profil Admin -->
                     <div class="flex items-center space-x-3">
-                        <img src="https://ui-avatars.com/api/?name=Zahra+Cellyna&background=0D8ABC&color=fff" alt="User Avatar" class="w-9 h-9 rounded-full">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->nama_lengkap ?? 'Admin') }}&background=0D8ABC&color=fff" alt="User Avatar" class="w-9 h-9 rounded-full">
                         <div>
-                            <p class="text-xs font-semibold text-gray-800">Zahra Cellyna</p>
-                            <p class="text-[10px] text-gray-400">Admin</p>
+                            <p class="text-xs font-semibold text-gray-800">{{ auth()->user()->nama_lengkap ?? 'Admin' }}</p>
+                            <p class="text-[10px] text-gray-400 capitalize">{{ auth()->user()->role ?? 'Admin' }}</p>
                         </div>
                     </div>
                 </div>
@@ -100,203 +102,99 @@
             <!-- CONTENT BODY -->
             <main class="p-8 space-y-6">
                 
-                <!-- TOP CARDS (4 STATS) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    
-                    <!-- Total User -->
-                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                <!-- TOP CARDS STATISTIK -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                    <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
                         <div>
-                            <p class="text-[11px] font-semibold text-gray-400 uppercase">Total User</p>
-                            <h3 class="text-2xl font-bold text-gray-800 mt-1">24</h3>
-                            <p class="text-[10px] text-gray-400 mt-0.5">Semua Pengguna</p>
+                            <p class="text-xs text-gray-400 font-medium">Total User</p>
+                            <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $totalUser }}</h3>
                         </div>
-                        <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center text-lg">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
                             <i class="fas fa-users"></i>
                         </div>
                     </div>
 
-                    <!-- User Aktif -->
-                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                    <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
                         <div>
-                            <p class="text-[11px] font-semibold text-gray-400 uppercase">User Aktif</p>
-                            <h3 class="text-2xl font-bold text-gray-800 mt-1">18</h3>
-                            <p class="text-[10px] text-gray-400 mt-0.5">Pengguna Aktif</p>
+                            <p class="text-xs text-gray-400 font-medium">User Aktif</p>
+                            <h3 class="text-2xl font-bold text-emerald-600 mt-1">{{ $userAktif }}</h3>
                         </div>
-                        <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-lg flex items-center justify-center text-lg">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
                             <i class="fas fa-user-check"></i>
                         </div>
                     </div>
 
-                    <!-- User Baru -->
-                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                    <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
                         <div>
-                            <p class="text-[11px] font-semibold text-gray-400 uppercase">User Baru</p>
-                            <h3 class="text-2xl font-bold text-gray-800 mt-1">6</h3>
-                            <p class="text-[10px] text-gray-400 mt-0.5">Bulan Ini</p>
+                            <p class="text-xs text-gray-400 font-medium">User Baru</p>
+                            <h3 class="text-2xl font-bold text-indigo-600 mt-1">{{ $userBaru }}</h3>
                         </div>
-                        <div class="w-10 h-10 bg-amber-50 text-amber-500 rounded-lg flex items-center justify-center text-lg">
+                        <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center">
                             <i class="fas fa-user-plus"></i>
                         </div>
                     </div>
 
-                    <!-- User Nonaktif -->
-                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                    <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
                         <div>
-                            <p class="text-[11px] font-semibold text-gray-400 uppercase">User Nonaktif</p>
-                            <h3 class="text-2xl font-bold text-gray-800 mt-1">6</h3>
-                            <p class="text-[10px] text-gray-400 mt-0.5">Tidak Aktif</p>
+                            <p class="text-xs text-gray-400 font-medium">User Nonaktif</p>
+                            <h3 class="text-2xl font-bold text-red-500 mt-1">{{ $userNonaktif }}</h3>
                         </div>
-                        <div class="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center text-lg">
+                        <div class="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center">
                             <i class="fas fa-user-slash"></i>
                         </div>
                     </div>
-
                 </div>
 
-                <!-- MAIN SECTION (TABLE + RIGHT SIDE PANEL) -->
+                <!-- MAIN SECTION (TABEL + SIDE PANELS) -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     
-                    <!-- TABLE USER (2 Columns Wide) -->
-                    <div class="lg:col-span-2 bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex flex-col justify-between">
+                    <!-- KIRI: TABEL USER (Span 2 Kolom) -->
+                    <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between">
                         <div>
-                            <!-- Header Table Controls -->
-                            <div class="flex justify-between items-center mb-5">
-                                <h4 class="font-bold text-gray-800">Daftar User</h4>
-                                <div class="flex items-center space-x-3">
-                                    <div class="relative">
-                                        <input type="text" placeholder="Cari nama atau email..." class="border border-gray-200 text-xs rounded-lg pl-8 pr-3 py-2 w-48 focus:outline-none focus:border-blue-500">
-                                        <i class="fas fa-search absolute left-2.5 top-2.5 text-gray-400 text-xs"></i>
-                                    </div>
-                                    <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3.5 py-2 rounded-lg font-medium flex items-center space-x-1 transition">
-                                        <span>+ Tambah User</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Table Data -->
+                            <h4 class="font-bold text-gray-800 text-sm mb-4">Daftar Pengguna</h4>
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left text-xs">
-                                    <thead>
-                                        <tr class="text-gray-400 border-b border-gray-100">
-                                            <th class="pb-3 px-2 font-medium">No</th>
-                                            <th class="pb-3 px-2 font-medium">Nama</th>
-                                            <th class="pb-3 px-2 font-medium">Email</th>
-                                            <th class="pb-3 px-2 font-medium">Role</th>
-                                            <th class="pb-3 px-2 font-medium">Status</th>
-                                            <th class="pb-3 px-2 font-medium">Terakhir Aktif</th>
+                                    <thead class="bg-gray-50 text-gray-500 uppercase font-semibold">
+                                        <tr>
+                                            <th class="py-3 px-4">No</th>
+                                            <th class="py-3 px-4">Nama Lengkap</th>
+                                            <th class="py-3 px-4">Username</th>
+                                            <th class="py-3 px-4">Role</th>
+                                            <th class="py-3 px-4">Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-gray-50 text-gray-600">
-                                        
-                                        <!-- Row 1 -->
-                                        <tr>
-                                            <td class="py-2.5 px-2">1</td>
-                                            <td class="py-2.5 px-2 font-medium text-gray-800 flex items-center space-x-2">
-                                                <img src="https://ui-avatars.com/api/?name=Zahra+Cellyna&background=0D8ABC&color=fff" class="w-6 h-6 rounded-full">
-                                                <span>Zahra Cellyna</span>
+                                    <tbody class="divide-y divide-gray-100">
+                                        @forelse($users as $index => $item)
+                                        <tr class="hover:bg-gray-50 transition">
+                                            <td class="py-3 px-4">{{ $users->firstItem() + $index }}</td>
+                                            <td class="py-3 px-4 font-medium text-gray-800">{{ $item->nama_lengkap }}</td>
+                                            <td class="py-3 px-4 text-gray-500">{{ $item->username }}</td>
+                                            <td class="py-3 px-4"><span class="capitalize px-2 py-0.5 rounded bg-gray-100 text-gray-700 text-[11px] font-medium">{{ $item->role }}</span></td>
+                                            <td class="py-3 px-4">
+                                                @if($item->status_aktif)
+                                                    <span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">Aktif</span>
+                                                @else
+                                                    <span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">Nonaktif</span>
+                                                @endif
                                             </td>
-                                            <td class="py-2.5 px-2">zahracell@gmail.com</td>
-                                            <td class="py-2.5 px-2"><span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded font-medium">Admin</span></td>
-                                            <td class="py-2.5 px-2"><span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">Aktif</span></td>
-                                            <td class="py-2.5 px-2 text-gray-400">Hari ini, 09:34</td>
                                         </tr>
-
-                                        <!-- Row 2 -->
+                                        @empty
                                         <tr>
-                                            <td class="py-2.5 px-2">2</td>
-                                            <td class="py-2.5 px-2 font-medium text-gray-800 flex items-center space-x-2">
-                                                <img src="https://ui-avatars.com/api/?name=Zahra+Cellyna&background=0D8ABC&color=fff" class="w-6 h-6 rounded-full">
-                                                <span>Zahra Cellyna</span>
-                                            </td>
-                                            <td class="py-2.5 px-2">zahracell@gmail.com</td>
-                                            <td class="py-2.5 px-2"><span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded font-medium">Admin</span></td>
-                                            <td class="py-2.5 px-2"><span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">Aktif</span></td>
-                                            <td class="py-2.5 px-2 text-gray-400">Hari ini, 09:34</td>
+                                            <td colspan="5" class="text-center py-6 text-gray-400">Data user tidak ditemukan.</td>
                                         </tr>
-
-                                        <!-- Row 3 -->
-                                        <tr>
-                                            <td class="py-2.5 px-2">3</td>
-                                            <td class="py-2.5 px-2 font-medium text-gray-800 flex items-center space-x-2">
-                                                <img src="https://ui-avatars.com/api/?name=Zahra+Cellyna&background=0D8ABC&color=fff" class="w-6 h-6 rounded-full">
-                                                <span>Zahra Cellyna</span>
-                                            </td>
-                                            <td class="py-2.5 px-2">zahracell@gmail.com</td>
-                                            <td class="py-2.5 px-2"><span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded font-medium">Admin</span></td>
-                                            <td class="py-2.5 px-2"><span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">Aktif</span></td>
-                                            <td class="py-2.5 px-2 text-gray-400">Hari ini, 09:34</td>
-                                        </tr>
-
-                                        <!-- Row 4 -->
-                                        <tr>
-                                            <td class="py-2.5 px-2">4</td>
-                                            <td class="py-2.5 px-2 font-medium text-gray-800 flex items-center space-x-2">
-                                                <img src="https://ui-avatars.com/api/?name=Zahra+Cellyna&background=0D8ABC&color=fff" class="w-6 h-6 rounded-full">
-                                                <span>Zahra Cellyna</span>
-                                            </td>
-                                            <td class="py-2.5 px-2">zahracell@gmail.com</td>
-                                            <td class="py-2.5 px-2"><span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded font-medium">Admin</span></td>
-                                            <td class="py-2.5 px-2"><span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">Aktif</span></td>
-                                            <td class="py-2.5 px-2 text-gray-400">Hari ini, 09:34</td>
-                                        </tr>
-
-                                        <!-- Row 5 -->
-                                        <tr>
-                                            <td class="py-2.5 px-2">5</td>
-                                            <td class="py-2.5 px-2 font-medium text-gray-800 flex items-center space-x-2">
-                                                <img src="https://ui-avatars.com/api/?name=Zahra+Cellyna&background=0D8ABC&color=fff" class="w-6 h-6 rounded-full">
-                                                <span>Zahra Cellyna</span>
-                                            </td>
-                                            <td class="py-2.5 px-2">zahracell@gmail.com</td>
-                                            <td class="py-2.5 px-2"><span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded font-medium">Admin</span></td>
-                                            <td class="py-2.5 px-2"><span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">Aktif</span></td>
-                                            <td class="py-2.5 px-2 text-gray-400">Hari ini, 09:34</td>
-                                        </tr>
-
-                                        <!-- Row 6 (Nonaktif) -->
-                                        <tr>
-                                            <td class="py-2.5 px-2">6</td>
-                                            <td class="py-2.5 px-2 font-medium text-gray-800 flex items-center space-x-2">
-                                                <img src="https://ui-avatars.com/api/?name=Zahra+Cellyna&background=0D8ABC&color=fff" class="w-6 h-6 rounded-full">
-                                                <span>Zahra Cellyna</span>
-                                            </td>
-                                            <td class="py-2.5 px-2">zahracell@gmail.com</td>
-                                            <td class="py-2.5 px-2"><span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded font-medium">Admin</span></td>
-                                            <td class="py-2.5 px-2"><span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">Nonaktif</span></td>
-                                            <td class="py-2.5 px-2 text-gray-400">3 Hari lalu, 11:23</td>
-                                        </tr>
-
-                                        <!-- Row 7 (Nonaktif) -->
-                                        <tr>
-                                            <td class="py-2.5 px-2">7</td>
-                                            <td class="py-2.5 px-2 font-medium text-gray-800 flex items-center space-x-2">
-                                                <img src="https://ui-avatars.com/api/?name=Zahra+Cellyna&background=0D8ABC&color=fff" class="w-6 h-6 rounded-full">
-                                                <span>Zahra Cellyna</span>
-                                            </td>
-                                            <td class="py-2.5 px-2">zahracell@gmail.com</td>
-                                            <td class="py-2.5 px-2"><span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded font-medium">Admin</span></td>
-                                            <td class="py-2.5 px-2"><span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">Nonaktif</span></td>
-                                            <td class="py-2.5 px-2 text-gray-400">3 Hari lalu, 11:23</td>
-                                        </tr>
-
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
                         <!-- Table Footer / Pagination -->
-                        <div class="flex justify-between items-center mt-5 pt-3 border-t border-gray-100 text-xs text-gray-400">
-                            <span>Menampilkan 1-10 dari 24 user</span>
-                            <div class="flex space-x-1">
-                                <button class="w-6 h-6 border rounded flex items-center justify-center hover:bg-gray-50"><i class="fas fa-chevron-left text-[10px]"></i></button>
-                                <button class="w-6 h-6 bg-blue-600 text-white rounded flex items-center justify-center font-medium">1</button>
-                                <button class="w-6 h-6 border rounded flex items-center justify-center hover:bg-gray-50">2</button>
-                                <button class="w-6 h-6 border rounded flex items-center justify-center hover:bg-gray-50"><i class="fas fa-chevron-right text-[10px]"></i></button>
-                            </div>
+                        <div class="mt-5 pt-3 border-t border-gray-100">
+                            {{ $users->links() }}
                         </div>
                     </div>
 
-                    <!-- RIGHT SIDE PANELS (Ringkasan + Aktivitas Terbaru) -->
+                    <!-- KANAN: RIGHT SIDE PANELS -->
                     <div class="space-y-6">
                         
                         <!-- Panel 1: Ringkasan User (Donut Chart) -->
@@ -321,46 +219,19 @@
                         <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
                             <h4 class="font-bold text-gray-800 text-sm mb-4">Aktivitas Terbaru</h4>
                             <div class="space-y-4">
-                                
-                                <!-- Log item 1 -->
                                 <div class="flex items-start space-x-3">
                                     <div class="w-7 h-7 bg-emerald-100 text-emerald-600 rounded flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
                                         <i class="fas fa-user-plus"></i>
                                     </div>
                                     <div class="flex-1">
                                         <p class="text-xs font-semibold text-gray-800">User baru ditambahkan</p>
-                                        <p class="text-[10px] text-gray-400">Zahra Cellyna</p>
+                                        <p class="text-[10px] text-gray-400">Sistem</p>
                                     </div>
-                                    <span class="text-[10px] text-gray-400">09:34</span>
+                                    <span class="text-[10px] text-gray-400">Terbaru</span>
                                 </div>
-
-                                <!-- Log item 2 -->
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-7 h-7 bg-blue-100 text-blue-600 rounded flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
-                                        <i class="fas fa-edit"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-xs font-semibold text-gray-800">Data user diperbarui</p>
-                                        <p class="text-[10px] text-gray-400">Zahra Cellyna</p>
-                                    </div>
-                                    <span class="text-[10px] text-gray-400">09:34</span>
-                                </div>
-
-                                <!-- Log item 3 -->
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-7 h-7 bg-red-100 text-red-500 rounded flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
-                                        <i class="fas fa-user-minus"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-xs font-semibold text-gray-800">User dinonaktifkan</p>
-                                        <p class="text-[10px] text-gray-400">Zahra Cellyna</p>
-                                    </div>
-                                    <span class="text-[10px] text-gray-400">Kemarin, 11:23</span>
-                                </div>
-
                             </div>
                             
-                            <a href="#" class="block text-center text-xs text-blue-600 font-medium hover:underline mt-5">Lihat semua aktivitas</a>
+                            <a href="{{ route('admin.log-aktivitas') }}" class="block text-center text-xs text-blue-600 font-medium hover:underline mt-5">Lihat semua aktivitas</a>
                         </div>
 
                     </div>
@@ -379,7 +250,7 @@
             data: {
                 labels: ['User Aktif', 'User Nonaktif'],
                 datasets: [{
-                    data: [18, 6],
+                    data: [{{ $userAktif }}, {{ $userNonaktif }}],
                     backgroundColor: ['#10B981', '#E5E7EB'],
                     borderWidth: 0
                 }]
